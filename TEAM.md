@@ -1,19 +1,27 @@
 # Team Information
 
-**Course:** _[fill your course code and name]_
+**Course:** EUTOPIA Pacman Capture-the-Flag AI Competition
 
-**Semester:** Semester 2, 2020
+**Semester:** Fall 2025
 
-**Instructor:** _[name of your instructor]_
+**Institution:** University of Ljubljana
 
-**Team name:** _[replace this with team name in plan text]_
+**Team name:** Competitive AI Team
 
 **Team members:**
 
-* Student 1's Student number - Full Name - Student email - Student Github id
-* Student 2's Student number - Full Name - Student email - Student Github id
-* Student 3's Student number - Full Name - Student email - Student Github id
+- Matej - matej@example.com
 
-Replace the lines above with the correct details of members. Delete or add lines as needed.
+## Agent Description
 
-Student numbers should just be the **numbers**.
+Our agent implementation uses advanced AI techniques including:
+
+- **Particle Filtering** for opponent position inference
+- **Dynamic Role Assignment** for adaptive offense/defense
+- **Feature-based Evaluation** with learned weights
+- **Strategic Patrol Behavior** for optimal defense
+- **Capsule-aware Planning** for power-up utilization
+
+### Performance
+
+Tested against baseline team with positive win rate across multiple game configurations.
