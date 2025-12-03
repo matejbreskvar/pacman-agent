@@ -21,7 +21,13 @@ ENV/
 .DS_Store
 Thumbs.db
 
-# Replay files (optional - uncomment if you don't want to commit replays)
-# *.replay
-# replays/
-# scores/
+# Training files (don't commit active training)
+offensive_strategy.pkl
+defensive_strategy.pkl
+*_merged.pkl
+logs/
+training_test.log
+*.log
+
+# Worker checkpoints for collaboration (uncomment to share training)
+# distributed_work/
