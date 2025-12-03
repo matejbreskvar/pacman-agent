@@ -4534,3 +4534,24 @@ Traceback (most recent call last):
     contest.capture.save_score(games=games[0], contest_name=options['contest_name'], match_id=options['game_id'])
                                                                                               ~~~~~~~^^^^^^^^^^^
 KeyError: 'game_id'
+
+Red team /home/matej/FAKS/PacMan/pacman-agent/my_team_hybrid.py with {}:
+Loading agent team: /home/matej/FAKS/PacMan/pacman-agent/my_team_hybrid.py
+	Arguments: {}
+✓ Loaded strategy learner: 123 episodes, 5766 Q-values
+✓ Loaded strategy learner: 123 episodes, 0 Q-values
+
+Blue team baseline_team with {}:
+Loading agent team: /home/matej/FAKS/PacMan/pacman-contest/src/contest/baseline_team.py
+	Arguments: {}
+0
+{'display': <contest.text_display.NullGraphics object at 0x7b274d04ec90>, 'red_team_name': 'Red', 'blue_team_name': 'Blue', 'agents': [<my_team_hybrid.HybridOffensiveAgent object at 0x7b274d0659d0>, <baseline_team.OffensiveReflexAgent object at 0x7b274d119010>, <my_team_hybrid.HybridDefensiveAgent object at 0x7b274d118aa0>, <baseline_team.DefensiveReflexAgent object at 0x7b274d119040>], 'layouts': [<contest.layout.Layout object at 0x7b274d1190d0>], 'length': 1200, 'num_games': 1, 'num_training': 0, 'record': False, 'catch_exceptions': False, 'delay_step': 0.03, 'match_id': 0, 'contest_name': 'default'}
+Blue team starts
+The Blue team has returned at least 28.0 of the opponents' dots.
+✓ Saved strategy learner: 124 episodes, 5789 Q-values
+✓ Saved strategy learner: 124 episodes, 0 Q-values
+Traceback (most recent call last):
+  File "/home/matej/FAKS/PacMan/pacman-contest/src/contest/../../runner.py", line 20, in <module>
+    contest.capture.save_score(games=games[0], contest_name=options['contest_name'], match_id=options['game_id'])
+                                                                                              ~~~~~~~^^^^^^^^^^^
+KeyError: 'game_id'
