@@ -17,13 +17,15 @@
 set -e
 
 # Default values
-NUM_WORKERS=${1:-4}
+NUM_WORKERS=${1:-16}
 GAMES_PER_WORKER=${2:-500}
+START_WORKER_ID=${3:-200}
 
 echo "======================================================================"
 echo "PARALLEL TRAINING SETUP"
 echo "======================================================================"
 echo "Workers: $NUM_WORKERS"
+echo "Worker IDs: $START_WORKER_ID - $((START_WORKER_ID + NUM_WORKERS - 1))"
 echo "Games per worker: $GAMES_PER_WORKER"
 echo "Total games: $((NUM_WORKERS * GAMES_PER_WORKER))"
 echo ""
@@ -52,7 +54,7 @@ echo ""
 
 # Start all workers in background
 worker_pids=()
-for i in $(seq 1 $NUM_WORKERS); do
+for i in $(seq $START_WORKER_ID $((START_WORKER_ID + NUM_WORKERS - 1))); do
     log_file="logs/worker_${i}.log"
     echo "Starting worker $i (log: $log_file)"
     
@@ -136,7 +138,7 @@ echo ""
 
 # Merge results
 echo "Merging results from all workers..."
-worker_list=$(seq -s, 1 $NUM_WORKERS)
+worker_list=$(seq -s, $START_WORKER_ID $((START_WORKER_ID + NUM_WORKERS - 1)))
 
 python3 distributed_training.py merge --workers "$worker_list"
 

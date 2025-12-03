@@ -31,3 +31,4 @@ training_test.log
 
 # Worker checkpoints for collaboration (uncomment to share training)
 # distributed_work/
+*.pkl

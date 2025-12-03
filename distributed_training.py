@@ -178,10 +178,12 @@ class DistributedTrainer:
             offensive_learner.load(str(worker_off))
             defensive_learner.load(str(worker_def))
         
-        # Save learners to the standard location so my_team_hybrid.py can load them
-        # This is how the learning agents will access the training state
-        offensive_learner.save('offensive_strategy.pkl', {'worker_id': worker_id, 'training': True})
-        defensive_learner.save('defensive_strategy.pkl', {'worker_id': worker_id, 'training': True})
+        # Save learners to worker-specific files so my_team_hybrid.py can load them
+        # Each worker uses its own strategy files to enable true parallel training
+        worker_off_strategy = f'offensive_strategy_w{worker_id}.pkl'
+        worker_def_strategy = f'defensive_strategy_w{worker_id}.pkl'
+        offensive_learner.save(worker_off_strategy, {'worker_id': worker_id, 'training': True})
+        defensive_learner.save(worker_def_strategy, {'worker_id': worker_id, 'training': True})
         
         # Run training games
         contest_dir = Path(__file__).parent.parent / "pacman-contest"
@@ -216,6 +218,7 @@ class DistributedTrainer:
             
             env = os.environ.copy()
             env['PYTHONPATH'] = str(CONTEST_DIR)
+            env['PACMAN_WORKER_ID'] = str(worker_id)  # Pass worker ID to agent
             
             try:
                 result = subprocess.run(
@@ -238,10 +241,10 @@ class DistributedTrainer:
                 print(f"  Result: {result_str} (W:{wins} L:{losses})")
                 
                 # Load updated learner state after each game
-                # (my_team_hybrid.py saves to these files in final())
+                # (my_team_hybrid.py saves to worker-specific files in final())
                 try:
-                    offensive_learner.load('offensive_strategy.pkl')
-                    defensive_learner.load('defensive_strategy.pkl')
+                    offensive_learner.load(worker_off_strategy)
+                    defensive_learner.load(worker_def_strategy)
                     print(f"  → Loaded: Off Episodes={offensive_learner.episodes}, Def Episodes={defensive_learner.episodes}")
                 except Exception as e:
                     print(f"  Warning: Could not load updated state: {e}")

@@ -170,9 +170,14 @@ def create_team(first_index, second_index, is_red,
     """Create hybrid team"""
     global offensive_strategy_learner, defensive_strategy_learner
     
-    # Load learned strategies (use absolute paths)
-    offensive_file = AGENT_DIR / 'offensive_strategy.pkl'
-    defensive_file = AGENT_DIR / 'defensive_strategy.pkl'
+    # Check for worker-specific files (for parallel training)
+    worker_id = os.environ.get('PACMAN_WORKER_ID', '')
+    if worker_id:
+        offensive_file = AGENT_DIR / f'offensive_strategy_w{worker_id}.pkl'
+        defensive_file = AGENT_DIR / f'defensive_strategy_w{worker_id}.pkl'
+    else:
+        offensive_file = AGENT_DIR / 'offensive_strategy.pkl'
+        defensive_file = AGENT_DIR / 'defensive_strategy.pkl'
     
     if offensive_file.exists():
         offensive_strategy_learner.load(str(offensive_file))
@@ -374,8 +379,12 @@ class HybridOffensiveAgent(OffensiveRevisedAgent):
         # Episode end
         self.learner.episode_end(final_score)
         
-        # Save every game (use absolute path to pacman-agent dir)
-        self.learner.save(str(AGENT_DIR / 'offensive_strategy.pkl'))
+        # Save every game - use worker-specific file for parallel training
+        worker_id = os.environ.get('PACMAN_WORKER_ID', '')
+        if worker_id:
+            self.learner.save(str(AGENT_DIR / f'offensive_strategy_w{worker_id}.pkl'))
+        else:
+            self.learner.save(str(AGENT_DIR / 'offensive_strategy.pkl'))
 
 
 class HybridDefensiveAgent(DefensiveRevisedAgent):
@@ -396,4 +405,9 @@ class HybridDefensiveAgent(DefensiveRevisedAgent):
     def final(self, game_state):
         """Save defensive strategy"""
         self.learner.episode_end(-self.get_score(game_state))
-        self.learner.save(str(AGENT_DIR / 'defensive_strategy.pkl'))
+        # Save - use worker-specific file for parallel training
+        worker_id = os.environ.get('PACMAN_WORKER_ID', '')
+        if worker_id:
+            self.learner.save(str(AGENT_DIR / f'defensive_strategy_w{worker_id}.pkl'))
+        else:
+            self.learner.save(str(AGENT_DIR / 'defensive_strategy.pkl'))
