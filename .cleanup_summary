@@ -1,0 +1,37 @@
+CLEANUP COMPLETED - December 3, 2025
+====================================
+
+REMOVED FILES (8 redundant documentation files):
+- TRAINING_README.md
+- SUMMARY.md  
+- ARCHITECTURE.md
+- GET_STARTED.md
+- DISTRIBUTED_TRAINING.md
+- QUICK_START_DISTRIBUTED.md
+- test_distributed.sh
+- quickstart_training.sh
+
+CONSOLIDATED INTO:
+- README.md (complete guide)
+- USAGE.txt (quick reference)
+
+FINAL PROJECT STRUCTURE (13 essential files):
+- 3 agent files (my_team*.py)
+- 5 training files (parallel_training.sh, distributed_training.py, etc.)
+- 2 tool files (compare_agents.py, requirements.txt)
+- 2 docs (README.md, USAGE.txt)
+- 1 config (TEAM.md)
+
+ALL FUNCTIONALITY PRESERVED:
+✅ Pause/resume training
+✅ Multi-core support (1-10000+ cores)
+✅ Distributed training across machines
+✅ Automatic checkpointing
+✅ Agent comparison tools
+✅ Complete documentation in README.md
+✅ Quick reference in USAGE.txt
+
+NEXT STEPS:
+1. Read: cat USAGE.txt
+2. Test: ./parallel_training.sh 2 10
+3. Train: ./parallel_training.sh 8 500
