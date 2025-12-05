@@ -4,7 +4,7 @@ Advanced Pacman Capture-the-Flag agent with AI training capabilities.
 
 ## Quick Start
 
-### 1. Setup (5 minutes)
+### 1. Setup
 
 ```bash
 git clone <repo-url>
@@ -14,7 +14,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Test Agent (2 minutes)
+### 2. Test Agent
 
 ```bash
 python3 compare_agents.py
@@ -22,114 +22,94 @@ python3 compare_agents.py
 
 ### 3. Train Agent
 
-```bash
-# Quick test (2 min, 20 games)
-./parallel_training.sh 2 10
+**Linux/macOS:**
 
-# Full training (use all your cores)
-./parallel_training.sh 8 500        # 8 cores: ~6 hours, 4k games
-./parallel_training.sh 64 1000      # 64 cores: ~2 hours, 64k games
-./parallel_training.sh 1000 500     # 1000 cores: ~1 hour, 500k games
+```bash
+./train.sh                    # Default: 8 workers, 100 games each
+./train.sh 16 500             # 16 workers, 500 games each
+./train.sh 8 100 --quick      # Quick mode (fewer opponents)
+```
+
+**Windows (PowerShell):**
+
+```powershell
+.\train.ps1                   # Default: 8 workers, 100 games each
+.\train.ps1 16 500            # 16 workers, 500 games each
+.\train.ps1 -NumWorkers 8 -GamesPerWorker 100 -Quick
 ```
 
 ## Available Agents
 
-- **`my_team.py`** - Original baseline (30% win rate)
-- **`my_team_v2.py`** - Improved hand-crafted (60% win rate)
-- **`my_team_hybrid.py`** ⭐ - RL + Advanced Search (trains to 80%+)
+| Agent                  | Description           | Use For                      |
+| ---------------------- | --------------------- | ---------------------------- |
+| `my_team_hybrid.py` ⭐ | RL + Advanced Search  | Competition (trains to 80%+) |
+| `my_team_v2.py`        | Hand-crafted advanced | Fallback / Opponent          |
+| `my_team.py`           | Original baseline     | Training opponent            |
+| `my_team_learning.py`  | Pure learning agent   | Experimental                 |
 
-Uses AlphaZero-style approach: v2's intelligence + RL strategy optimization.
+## Training System
+
+The training script (`train.sh`) trains your agent against a diverse pool of opponents:
+
+**Built-in opponents:**
+
+- `baseline` - Basic reflex agent
+- `self-play` - Train against itself
+
+**Our agents:**
+
+- `v2` - Your hand-crafted advanced agent
+- `original` - Your first version agent
+
+**Fork agents (in `opponents/` folder):**
+
+- Angela-Dimi, Anonymous-Sisters, Packstreet
+- emai, pacman_comp, Adaptive
+
+### Training Output
+
+After training, your agent is saved to:
+
+- `offensive_strategy.pkl` - Offensive agent strategy
+- `defensive_strategy.pkl` - Defensive agent strategy
+
+### Continue Training
+
+Training is resumable - just run `./train.sh` again to continue from where you left off.
 
 ## Competition Settings
 
 Training uses official competition rules:
 
-- ✓ **Time Limit**: 1200 moves (300 per agent)
-- ✓ **Layouts**: Random + official maps (defaultCapture, mediumCapture, officeCapture, strategicCapture, crowdedCapture, distantCapture)
-- ✓ **Computation**: 1s per move, 15s initial setup, 3 warnings = forfeit
-- ✓ **Graphics**: Disabled during training (`-q` flag)
-- ✓ **Scoring**: Win = 3pts, Tie = 1pt, Loss = 0pts
-
-## Training System
-
-### Pause/Resume Training
-
-```bash
-./parallel_training.sh 8 1000    # Start
-# Press Ctrl+C to stop anytime
-./parallel_training.sh 8 1000    # Resume automatically
-```
-
-### Multi-Machine Training
-
-```bash
-# Machine 1
-python3 distributed_training.py worker --id 1 --games 1000
-
-# Machine 2
-python3 distributed_training.py worker --id 2 --games 1000
-
-# Merge results
-python3 distributed_training.py merge --workers 1,2
-```
-
-### Performance Scaling
-
-| Cores | Time (10k games) | Speedup |
-| ----- | ---------------- | ------- |
-| 1     | 100 hours        | 1×      |
-| 4     | 28 hours         | 3.5×    |
-| 16    | 8 hours          | 12×     |
-| 64    | 2.5 hours        | 40×     |
-| 1000  | 10 minutes       | 600×    |
-
-## Key Features
-
-**Hand-Crafted Agent (v2):**
-
-- Particle filtering for opponent tracking
-- A\* pathfinding with danger avoidance
-- Dynamic carry thresholds
-- Dead-end detection
-- Strategic capsule hunting
-
-**AI Learning Agent:**
-
-- Q-Learning & Deep Q-Networks
-- Experience replay
-- Opponent modeling
-- Self-play training
-- Auto-checkpointing every 10 games
+- **Time Limit**: 1200 moves (300 per agent)
+- **Layouts**: Random + official maps
+- **Computation**: 1s per move, 15s initial setup
+- **Scoring**: Win = 3pts, Tie = 1pt, Loss = 0pts
 
 ## Files
 
 **Agent Files:**
 
-- `my_team.py` - Original agent
-- `my_team_v2.py` - Improved agent (use for competitions)
-- `my_team_learning.py` - AI trainable agent
+- `my_team_hybrid.py` - Main competition agent (RL + hand-crafted)
+- `my_team_v2.py` - Hand-crafted advanced agent
+- `my_team.py` - Original baseline agent
+- `my_team_learning.py` - Pure learning agent
 
 **Training:**
 
-- `parallel_training.sh` - Multi-core training launcher
-- `distributed_training.py` - Distributed training system
-- `training_framework.py` - Q-Learning & DQN core
-- `train_agent.py` - Single-core training script
-- `variant_agents.py` - Training opponents
+- `train.sh` - Training launcher (Linux/macOS)
+- `train.ps1` - Training launcher (Windows PowerShell)
+- `training_worker.py` - Training worker (spawned by train scripts)
+- `training_framework.py` - Q-Learning core
+
+**Opponents:**
+
+- `opponents/` - Fork agents for diverse training
 
 **Tools:**
 
 - `compare_agents.py` - Test agents against each other
 - `requirements.txt` - Python dependencies
-
-## Documentation
-
-For detailed training information, see inline help:
-
-```bash
-python3 distributed_training.py --help
-python3 train_agent.py --help
-```
 
 ## License
 
